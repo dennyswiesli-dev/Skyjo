@@ -36,8 +36,8 @@
   --color-bg:#161826;
   --color-surface:#232532;
   --color-text:#e9e9ed;
-  --color-accent:#9184d9;
-  --color-accent-2:#a7a1db;
+  --color-accent:#a78bfa;
+  --color-accent-2:#c4b5fd;
   --color-divider:color-mix(in srgb, #e9e9ed 16%, transparent);
   --color-neutral-800:#3f424d;
   --color-neutral-100:#f3f5fe;
@@ -51,12 +51,12 @@
 
   --radius-sm:4px; --radius-md:8px; --radius-lg:14px;
 
-  /* Skyjo score-band tones, muted for the dark ground */
-  --tone-neg:#7c9fe0;
-  --tone-low:#6fc2c7;
-  --tone-mid:#7fbf8a;
-  --tone-high:#e0b969;
-  --tone-crit:#e0776f;
+  /* Skyjo score-band tones */
+  --tone-neg:#5b93f5;
+  --tone-low:#33d1c4;
+  --tone-mid:#4ad672;
+  --tone-high:#f2b53d;
+  --tone-crit:#f2544a;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -89,12 +89,18 @@ body{
 .tagline{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb, var(--color-text) 45%, transparent)}
 
 /* — cards — */
-.card{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:var(--radius-md);background:var(--color-surface)}
-.card-kicker{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent)}
-#setup{gap:14px}
-#entry-card{gap:12px}
-#stats-card{gap:14px}
-#finale{gap:10px;padding:20px;background:color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));border:1px solid color-mix(in srgb, var(--color-accent) 40%, transparent)}
+.card{display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:var(--radius-md);background:var(--color-surface);border-top:3px solid var(--card-accent, var(--color-accent))}
+.card[hidden]{display:none}
+.card-kicker{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--card-accent, var(--color-accent))}
+#setup{gap:14px;--card-accent:var(--color-accent)}
+#entry-card{gap:12px;--card-accent:var(--tone-neg)}
+#stats-card{gap:14px;--card-accent:var(--tone-mid)}
+#standings-card{--card-accent:var(--tone-low)}
+#history-card{--card-accent:var(--tone-high)}
+#controls{--card-accent:var(--tone-crit)}
+#finale{gap:12px;padding:20px;--card-accent:var(--tone-high);background:color-mix(in srgb, var(--tone-high) 12%, var(--color-surface));border:1px solid color-mix(in srgb, var(--tone-high) 45%, transparent);border-top:1px solid color-mix(in srgb, var(--tone-high) 45%, transparent)}
+#finale .card-kicker{display:flex;align-items:center;gap:6px}
+.finale-note{margin:0;font-size:12.5px;color:color-mix(in srgb, var(--color-text) 55%, transparent)}
 
 /* — buttons — */
 .btn{
@@ -164,7 +170,7 @@ body{
 .target-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:color-mix(in srgb, var(--color-text) 60%, transparent)}
 
 /* — sieger — */
-.win-name{font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--color-accent)}
+.win-name{font-size:26px;font-weight:600;letter-spacing:-.02em;color:var(--tone-high)}
 .win-sub{margin:0;color:color-mix(in srgb, var(--color-text) 70%, transparent);font-size:14px}
 
 /* — rangliste — */
@@ -172,7 +178,7 @@ body{
 .round-meta{font-family:var(--font-mono);font-size:10px;color:color-mix(in srgb, var(--color-text) 45%, transparent)}
 .rank{display:flex;flex-direction:column;gap:9px}
 .rank-row{border-radius:11px;padding:10px 13px;background:var(--color-surface);border:1px solid var(--color-divider)}
-.rank-row.lead{background:linear-gradient(90deg, rgba(127,191,138,.12), var(--color-surface) 55%);border-color:rgba(127,191,138,.5)}
+.rank-row.lead{background:linear-gradient(90deg, color-mix(in srgb, var(--tone-mid) 18%, transparent), var(--color-surface) 55%);border-color:color-mix(in srgb, var(--tone-mid) 55%, transparent)}
 .rank-top{display:flex;align-items:baseline;gap:10px}
 .pos{font-family:var(--font-mono);font-size:12px;color:color-mix(in srgb, var(--color-text) 45%, transparent);width:20px;flex:none}
 .rank-name{font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -256,11 +262,12 @@ footer{text-align:center;padding:16px 0 4px;font-size:11px;color:color-mix(in sr
 
   <!-- SIEGER -->
   <section class="card" id="finale" hidden>
-    <div class="card-kicker">Partie beendet</div>
+    <div class="card-kicker">🏆 Zielpunktzahl erreicht – Partie beendet</div>
     <div class="win-name" id="win-name"></div>
     <p class="win-sub" id="win-sub"></p>
+    <p class="finale-note">Runde weiterspielen oder mit denselben Spielern neu starten?</p>
     <div class="btn-row">
-      <button class="btn btn-secondary" id="again-btn">Neue Partie, gleiche Spieler</button>
+      <button class="btn btn-primary" id="again-btn">Neue Partie, gleiche Spieler</button>
       <button class="btn btn-ghost" id="keepgoing-btn">Trotzdem weiterspielen</button>
     </div>
   </section>
