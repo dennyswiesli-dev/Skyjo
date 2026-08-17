@@ -6,8 +6,25 @@
 <title>Skyjo Wertungsblock</title>
 <meta name="description" content="Punktezähler für Skyjo: Spieler verwalten, Runden erfassen, Verdopplung automatisch berechnen, Statistiken über mehrere Runden.">
 <meta name="theme-color" content="#0E1116">
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png">
+
+<!-- iOS: Homescreen-Installation -->
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Skyjo">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<!-- Social Preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Skyjo Wertungsblock">
+<meta property="og:description" content="Punktezähler für Skyjo mit automatischer Verdopplungsregel, Rangliste und Statistik.">
+<meta property="og:image" content="icons/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -44,7 +61,15 @@ body{
   font-size:16px;
   line-height:1.45;
   -webkit-text-size-adjust:100%;
-  padding-bottom:48px;
+  /* Notch und Home-Indicator: im Standalone-Modus gibt es keine Browserleiste */
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:calc(48px + env(safe-area-inset-bottom));
+  padding-left:env(safe-area-inset-left);
+  padding-right:env(safe-area-inset-right);
+  overscroll-behavior-y:contain;
+}
+@media (display-mode:standalone){
+  header{padding-top:10px}
 }
 body::before{
   content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
@@ -290,7 +315,10 @@ footer a{color:var(--ink-faint)}
     </div>
   </section>
 
-  <footer>Regelbasis: Skyjo von Magilano · Punktestand bleibt im Browser gespeichert</footer>
+  <div style="text-align:center;margin-bottom:6px">
+    <button class="btn btn-ghost" id="install-btn" hidden>App installieren</button>
+  </div>
+  <footer>Regelbasis: Skyjo von Magilano · Punktestand bleibt auf dem Gerät</footer>
 </div>
 
 <script>
@@ -705,6 +733,26 @@ load();
 if(state.phase === "play" && state.players.length < 2) state.phase = "setup";
 resetDraft();
 render();
+
+/* ============ Offline-Betrieb ============ */
+if("serviceWorker" in navigator){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){ /* z.B. file:// – App läuft trotzdem */ });
+  });
+}
+
+/* Android/Desktop: eigener Installationsknopf, sobald der Browser ihn anbietet */
+var deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", function(e){
+  e.preventDefault(); deferredPrompt = e;
+  var b = $("install-btn"); if(b) b.hidden = false;
+});
+var ib = $("install-btn");
+if(ib) ib.addEventListener("click", function(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.finally(function(){ deferredPrompt = null; ib.hidden = true; });
+});
 
 })();
 </script>

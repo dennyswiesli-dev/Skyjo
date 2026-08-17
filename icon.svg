@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Skyjo Wertungsblock">
+  <title>Skyjo Wertungsblock</title>
+  <rect width="512" height="512" rx="113" fill="#0E1116"/>
+  <!-- 2x2 Auslage in den Skyjo-Kartenfarben: minus, tief, mittel, hoch -->
+  <g transform="rotate(-9 256 256)" stroke="#ffffff" stroke-opacity=".18" stroke-width="2.5">
+    <rect x="92.5"  y="50.5"  width="149" height="191" rx="24" fill="#2E6FC7"/>
+    <rect x="270.5" y="50.5"  width="149" height="191" rx="24" fill="#57B25B"/>
+    <rect x="92.5"  y="270.5" width="149" height="191" rx="24" fill="#E8B84B"/>
+    <rect x="270.5" y="270.5" width="149" height="191" rx="24" fill="#DE4F3C"/>
+  </g>
+</svg>
